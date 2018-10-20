@@ -18,5 +18,14 @@ sudo apt install python-pip
 Once you have python-pip installed you will need to install the python dependencies by running
 
 ```
-pip install flask pypiwin32 pythonnet comtypes pywebview
+pip install flask pypiwin32 pythonnet comtypes pywebview sightengine
 ```
+
+## Social Channels
+
+| Site | link |
+|:-----------|:-----------|
+| Bitcointalk | https://bitcointalk.org/index.php?topic=2026344.0 |
+| Twitter | https://twitter.com/KekcoinCore |
+| Reddit | http://www.reddit.com/r/KekcoinOfficial |
+| Telegram | https://t.me/KekcoinOfficial |

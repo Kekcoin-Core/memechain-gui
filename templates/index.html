@@ -58,6 +58,9 @@
                         <a href="/#">Memechain</a>
                     </li>
                     <li class="page-scroll">
+                        <a href="/#">Upload</a>
+                    </li>
+                    <li class="page-scroll">
                         <a href="/#">Settings</a>
                     </li>                    
                 </ul>
@@ -66,10 +69,24 @@
         </div>
         <!-- /.container-fluid -->
     </nav>
-
+    <br><br>
     <section id="about">
         <div class="container">
-            
+        <br><br>
+        
+        {% for meme in content %}
+            <div class="row" style="padding: 5px">
+                <div class="col-lg-8 col-lg-offset-2 panel panel-default">
+                    <h2>Meme #{{meme.meme_height}}</h2>
+                    <img class="img-responsive" style="align:center; width:90%;" src="https://ipfs.io/ipfs/{{meme.ipfs_id}}">
+                    <p>Meme IPFS ID: {{meme.ipfs_id}}</p>
+                    <p>Meme TX ID: <a href="http://explorer.kekcoin.co/tx/{{meme.txid}}">{{meme.txid}}</a></p>
+                    <p>Meme Hashlink: {{meme.hashlink}}</p>
+                    <p>Meme Kekcoin block: {{meme.block}}</p>
+                </div>
+            </div>
+        {% endfor %}
+
         </div>
     </section>
 
@@ -79,7 +96,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12">
-                        Copyright &copy; Kekcoin Core Developers 2017-18 &bull; <a href="/terms">Terms & Conditions</a>
+                        Copyright &copy; Kekcoin Core Developers 2018 &bull;
                     </div>
                 </div>
             </div>

@@ -1,7 +1,7 @@
 from threading import Thread, Lock
 import logging
 import webview
-from time import sleep
+import time
 from app import run_server
 
 server_lock = Lock()

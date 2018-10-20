@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 import flask
 
+from memechain import MemeChain
+
 # Debug
 # Set this to 'False' in a production environment.
 debug = False
@@ -18,7 +20,10 @@ def add_header(response):
 # Index route: renders the landing/home page from templates.
 @app.route("/")
 def index():
-    return flask.render_template("index.html", isform=False)
+    chain = MemeChain()
+    content = chain.get_last_5_memes()
+
+    return flask.render_template("index.html", content = content, isform=False)
 
 def run_server():
     app.run(host='127.0.0.1', port=1133, debug=debug, use_reloader=False, threaded=True)
