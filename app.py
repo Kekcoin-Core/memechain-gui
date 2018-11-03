@@ -3,6 +3,7 @@
 import flask
 
 from memechain import MemeChain
+from utils import MemeTimeline, Pagination
 
 # Debug
 # Set this to 'False' in a production environment.
@@ -19,11 +20,13 @@ def add_header(response):
 
 # Index route: renders the landing/home page from templates.
 @app.route("/")
-def index():
-    chain = MemeChain()
-    content = chain.get_last_5_memes()
+@app.route('/<int:page>')
+def index(page=1):
+    p = Pagination(per_page=5, current_page=page)
 
-    return flask.render_template("index.html", content = content, isform=False)
+    timeline = MemeTimeline.find_paginated(p)
+    return flask.render_template('index.html', timeline=timeline, pagination=p, isForm=False)
+
 
 def run_server():
     app.run(host='127.0.0.1', port=1133, debug=debug, use_reloader=False, threaded=True)

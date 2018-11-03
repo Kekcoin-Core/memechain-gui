@@ -55,7 +55,7 @@
                         <a href="/"></a>
                     </li>
                     <li class="page-scroll">
-                        <a href="/#">Memechain</a>
+                        <a href="/">Memechain</a>
                     </li>
                     <li class="page-scroll">
                         <a href="/#">Upload</a>
@@ -70,23 +70,26 @@
         <!-- /.container-fluid -->
     </nav>
     <br><br>
-    <section id="about">
-        <div class="container">
-        <br><br>
-        
-        {% for meme in content %}
-            <div class="row" style="padding: 5px">
+    
+    <section id="memes">
+        <div id="timeline" class="container">
+            <br><br>
+
+            {% for meme in timeline %}
+            <div class="row row__next" style="padding: 5px">
                 <div class="col-lg-8 col-lg-offset-2 panel panel-default">
                     <h2>Meme #{{meme.meme_height}}</h2>
                     <img class="img-responsive" style="align:center; width:90%;" src="https://ipfs.io/ipfs/{{meme.ipfs_id}}">
                     <p>Meme IPFS ID: {{meme.ipfs_id}}</p>
-                    <p>Meme TX ID: <a href="http://explorer.kekcoin.co/tx/{{meme.txid}}">{{meme.txid}}</a></p>
+                    <p>Meme TX ID: <a href="http://explorer.kekcoin.co/tx/{{meme.txid}}" target="_blank">{{meme.txid}}</a></p>
+                    <p>Meme Author: <a href="http://explorer.kekcoin.co/address/{{meme.author}}" target="_blank">{{meme.author}}</a></p>
                     <p>Meme Hashlink: {{meme.hashlink}}</p>
                     <p>Meme Kekcoin block: {{meme.block}}</p>
                 </div>
             </div>
-        {% endfor %}
+            {% endfor %}
 
+            <a class="pagination__next" {% if pagination.next_page %}href="{{ url_for('index', page=pagination.next_page) }}"{% endif %}></a>
         </div>
     </section>
 
@@ -118,6 +121,18 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
     <!-- Theme JavaScript -->
     <script src="{{ url_for('static', filename='js/freelancer.min.js') }}"></script>
+    <!-- Infinite Scroll -->
+    <script src="{{ url_for('static', filename='js/infinite-scroll.pkgd.min.js') }}"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('#timeline').infiniteScroll({
+            path : ".pagination__next",
+            append : ".row__next",
+            history : false,
+            bufferPx: 1000,
+            });
+        });
+    </script>
 
 </body>
 
