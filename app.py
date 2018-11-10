@@ -3,7 +3,6 @@
 import flask
 import os, requests
 
-from memechain import MemeChain
 from utils import MemeTimeline, Pagination
 
 # Debug
