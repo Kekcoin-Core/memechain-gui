@@ -1,6 +1,8 @@
 import json, urllib2
 from math import ceil
 
+from sightengine.client import SightengineClient
+
 def getJSON(url):
         return json.loads(urllib2.urlopen(urllib2.Request(url), timeout=30).read())
 
@@ -86,11 +88,22 @@ class MemeTimeline(object):
         
     @classmethod
     def find(self, limit=100, start=0):
+        sightclient = SightengineClient("1347331372", "BhoFasNuF3zAGp8XSRXi")
         timeline = []
 
         for ident in range(start, start + limit):
             meme_height = self.memechain_height-ident
             rawdata_meme = getJSON("%s/getmemedatabyheight/%s" % (self.api_root, str(meme_height)))['result']
-            timeline.append(dict(rawdata_meme, **{'meme_height' : meme_height}))
-        
+
+            sight_output = sightclient.check('nudity').set_url('https://ipfs.io/ipfs/%s' % rawdata_meme['ipfs_id'])
+
+            try:
+                if sight_output['nudity']['safe'] > 0.5:
+                    timeline.append(dict(rawdata_meme, **{'meme_height' : meme_height}))
+                else:
+                    pass
+
+            except KeyError as e:
+                    timeline.append(dict(rawdata_meme, **{'meme_height' : meme_height}))
+
         return timeline
