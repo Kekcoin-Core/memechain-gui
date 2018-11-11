@@ -21,7 +21,7 @@ Once you have python-pip installed you will need to install the python dependenc
 pip install flask pypiwin32 pythonnet comtypes pywebview sightengine
 ```
 
-## How to Compile the Memechain GUI
+### How to Compile the Memechain GUI
 
 We use pyinstaller. To install this run 
 

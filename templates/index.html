@@ -5,13 +5,16 @@
     <div id="uploadmeme" class="container">
         <div class="row">
             <br><br>
-            <div class="col-lg-8 col-lg-offset-2 panel panel-default" style="padding-bottom: 5px">
+            <div class="col-lg-8 col-lg-offset-2 panel panel-default" style="padding-bottom: 5px;">
                 <h3>Upload Meme</h3>
                 <form action="/upload" method="post" enctype="multipart/form-data">
                     <input type="file" name="image">
                     <br>
                     <input type="submit" value="Upload your image" class="btn btn-primary">
                 </form>
+            </div>
+            <div class="col-4 text-center">
+                <button onclick="location.href='/';" class="btn btn-primary"><span class="glyphicon glyphicon-refresh"></span> Refresh Memes</button>
             </div>
         </div>
     </div>

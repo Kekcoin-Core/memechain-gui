@@ -8,6 +8,7 @@ from utils import MemeTimeline, Pagination
 # Debug
 # Set this to 'False' in a production environment.
 debug = False
+debug_reloader = False
 
 # Initialize Flask App
 app = flask.Flask(__name__)
@@ -51,10 +52,12 @@ def upload_file():
                 return flask.redirect('/upload-success')
 
         except KeyError as e:
-            return flask.abort(400)
+            error_msg = json_response['description']
+            return flask.render_template('upload-failed.html', error_msg = error_msg)
     
     else:
-        return flask.abort(400)
+        error_msg = "Meme file extension not supported."
+        return flask.render_template('upload-failed.html', error_msg = error_msg)
 
 @app.route('/upload-success')
 def upload_success():
@@ -65,7 +68,7 @@ def settings():
 	return flask.render_template('settings.html')
 
 def run_server():
-    app.run(host='127.0.0.1', port=1133, debug=debug, use_reloader=False, threaded=True)
+    app.run(host='127.0.0.1', port=1133, debug=debug, use_reloader=debug_reloader, threaded=True)
 
 # Run app
 if __name__ == '__main__':
