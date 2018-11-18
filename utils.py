@@ -1,10 +1,13 @@
-import json, urllib2
+import json
+import urllib2
 from math import ceil
 
 from sightengine.client import SightengineClient
 
+
 def getJSON(url):
-        return json.loads(urllib2.urlopen(urllib2.Request(url), timeout=30).read())
+    return json.loads(urllib2.urlopen(urllib2.Request(url), timeout=30).read())
+
 
 class Pagination(object):
     """A Pagination object to be used for querying and displaying pagination links on frontend
@@ -72,38 +75,67 @@ class Pagination(object):
     @property
     def start(self):
         """The starting offset used when querying"""
-        return self.current_page * self.per_page - self.per_page 
+        return self.current_page * self.per_page - self.per_page
+
 
 class MemeTimeline(object):
 
     @classmethod
     def find_paginated(self, pagination):
-        self.api_root = "http://95.179.132.93:1337/api"
-        self.memechain_height = int(getJSON("%s/getheight" % self.api_root)['result'])
+        self.api_root = "http://127.0.0.1:1337/api"
+        self.memechain_height = int(
+            getJSON("%s/getheight" % self.api_root)['result'])
         # self.count returns the total number of items in the timeline
         pagination.total = self.memechain_height
         # pass in the pagination params which can be used as offset
         timeline = self.find(limit=pagination.per_page, start=pagination.start)
         return timeline
-        
+
     @classmethod
     def find(self, limit=100, start=0):
         sightclient = SightengineClient("1347331372", "BhoFasNuF3zAGp8XSRXi")
         timeline = []
 
         for ident in range(start, start + limit):
-            meme_height = self.memechain_height-ident
-            rawdata_meme = getJSON("%s/getmemedatabyheight/%s" % (self.api_root, str(meme_height)))['result']
+            meme_height = self.memechain_height - ident
+            rawdata_meme = getJSON("%s/getmemedatabyheight/%s" %
+                                   (self.api_root, str(meme_height)))['result']
 
-            sight_output = sightclient.check('nudity').set_url('https://ipfs.io/ipfs/%s' % rawdata_meme['ipfs_id'])
+            sight_output = sightclient.check('nudity').set_url(
+                'https://ipfs.io/ipfs/%s' % rawdata_meme['ipfs_id'])
 
             try:
                 if sight_output['nudity']['safe'] > 0.5:
-                    timeline.append(dict(rawdata_meme, **{'meme_height' : meme_height}))
+                    timeline.append(
+                        dict(rawdata_meme, **{'meme_height': meme_height}))
                 else:
                     pass
 
             except KeyError as e:
-                    timeline.append(dict(rawdata_meme, **{'meme_height' : meme_height}))
+                timeline.append(
+                    dict(rawdata_meme, **{'meme_height': meme_height}))
 
         return timeline
+
+    @classmethod
+    def find_meme(self, meme):
+        sightclient = SightengineClient("1347331372", "BhoFasNuF3zAGp8XSRXi")
+
+        try:
+            height = int(meme)
+            # meme represents height
+            rawdata_meme = getJSON("%s/getmemedatabyheight/%s" %
+                                   (self.api_root, meme))['result']
+
+        except ValueError as e:
+            # meme represents ipfsid
+            rawdata_meme = getJSON("%s/getmemedatabyhash/%s" %
+                                   (self.api_root, meme))['result']
+
+        sight_output = sightclient.check('nudity').set_url(
+            'https://ipfs.io/ipfs/%s' % rawdata_meme['ipfs_id'])
+
+        if sight_output['nudity']['safe'] > 0.5:
+            return dict(rawdata_meme,**{'meme_height': self.memechain_height})
+        else:
+            return None

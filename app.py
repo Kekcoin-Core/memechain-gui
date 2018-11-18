@@ -1,7 +1,8 @@
 #/usr/bin/env python
 # -*- coding: utf-8 -*-
 import flask
-import os, requests
+import os
+import requests
 
 from sightengine.client import SightengineClient
 
@@ -15,14 +16,16 @@ debug = False
 app = flask.Flask(__name__)
 
 # Config
-app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 1 # disable caching
+app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 1  # disable caching
 app.config['UPLOAD_FOLDER'] = './'
 ALLOWED_EXT = ["jpg", "png", "gif"]
+
 
 @app.after_request
 def add_header(response):
     response.headers['Cache-Control'] = 'no-store'
     return response
+
 
 @app.route("/")
 @app.route('/<int:page>')
@@ -31,6 +34,16 @@ def index(page=1):
 
     timeline = MemeTimeline.find_paginated(p)
     return flask.render_template('index.html', timeline=timeline, pagination=p, isForm=False)
+
+
+@app.route('/meme/<meme_rep>')
+def meme(meme_rep):
+    meme = MemeTimeline.find_meme(meme_rep)
+    if meme is None:
+        return flask.render_template('getmeme-failed.html')
+    else:
+        return flask.render_template('meme.html', meme=meme)
+
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
@@ -48,9 +61,10 @@ def upload_file():
         if sight_output['nudity']['safe'] > 0.5:
             if ext == 'jpg':
                 ext = 'jpeg'
-            headers = {'Content-Type' : 'image/%s' % ext.lower()}
+            headers = {'Content-Type': 'image/%s' % ext.lower()}
 
-            req = requests.post("http://95.179.132.93:1337/api/addmeme", data=file_read, stream=True, headers=headers)
+            req = requests.post("http://127.0.0.1:1337/api/addmeme",
+                                data=file_read, stream=True, headers=headers)
             json_response = req.json()
 
             try:
@@ -59,22 +73,26 @@ def upload_file():
 
             except KeyError as e:
                 error_msg = json_response['description']
-                return flask.render_template('upload-failed.html', error_msg = error_msg)
+                return flask.render_template('upload-failed.html', error_msg=error_msg)
 
         else:
             error_msg = "Meme image has not passed profanity filter. Please do not upload offensive materials."
-            return flask.render_template('upload-failed.html', error_msg = error_msg) 
-    
+            return flask.render_template('upload-failed.html', error_msg=error_msg)
+
     else:
         error_msg = "Meme file extension not supported."
-        return flask.render_template('upload-failed.html', error_msg = error_msg)
+        return flask.render_template('upload-failed.html', error_msg=error_msg)
+
 
 @app.route('/settings')
 def settings():
-	return flask.render_template('settings.html')
+    return flask.render_template('settings.html')
+
 
 def run_server():
-    app.run(host='127.0.0.1', port=1133, debug=debug, use_reloader=debug, threaded=True)
+    app.run(host='127.0.0.1', port=1133, debug=debug,
+            use_reloader=debug, threaded=True)
+
 
 # Run app
 if __name__ == '__main__':
