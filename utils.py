@@ -79,12 +79,11 @@ class Pagination(object):
 
 
 class MemeTimeline(object):
+    api_root = "http://95.179.132.93:1337/api"
+    memechain_height = int(getJSON("%s/getheight" % api_root)['result'])
 
     @classmethod
     def find_paginated(self, pagination):
-        self.api_root = "http://127.0.0.1:1337/api"
-        self.memechain_height = int(
-            getJSON("%s/getheight" % self.api_root)['result'])
         # self.count returns the total number of items in the timeline
         pagination.total = self.memechain_height
         # pass in the pagination params which can be used as offset

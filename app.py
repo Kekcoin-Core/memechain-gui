@@ -63,7 +63,7 @@ def upload_file():
                 ext = 'jpeg'
             headers = {'Content-Type': 'image/%s' % ext.lower()}
 
-            req = requests.post("http://127.0.0.1:1337/api/addmeme",
+            req = requests.post("http://95.179.132.93:1337/api/addmeme",
                                 data=file_read, stream=True, headers=headers)
             json_response = req.json()
 
@@ -87,6 +87,10 @@ def upload_file():
 @app.route('/settings')
 def settings():
     return flask.render_template('settings.html')
+
+@app.route('/terms')
+def terms():
+    return flask.render_template('terms.html')
 
 
 def run_server():

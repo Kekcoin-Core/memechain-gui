@@ -3,6 +3,7 @@
 <section id="memes">
 
     <div id="meme" class="container">
+        <br><br>
         <div class="col-lg-8 col-lg-offset-2 panel panel-default">
             <h2>Meme {{meme.meme_height}}</h2>
             <img class="img-responsive" style="align:center; width:80%; display: block; margin-left: auto; margin-right: auto;" src="https://ipfs.io/ipfs/{{meme.ipfs_id}}">
@@ -14,6 +15,5 @@
         </div>
         
     </div>
-    <div class="container"><img class="img-responsive" style="align:center; width:10%; display: block; margin-left: auto; margin-right: auto;" src="{{ url_for('static', filename='img/loading.gif') }}"></div>
 </section>
 {% endblock %}
