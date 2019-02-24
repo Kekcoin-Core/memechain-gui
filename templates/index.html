@@ -31,14 +31,14 @@
     <div id="timeline" class="container">
         {% for meme in timeline %}
         <div class="row row__next" style="padding: 5px">
-            <div class="col-lg-8 col-lg-offset-2 panel panel-default">
+            <div class="col-lg-8 col-lg-offset-2 panel panel-default text-center" style="font-size:6pt">
                 <h2>Meme #{{meme.meme_height}}</h2>
-                <img class="img-responsive" style="align:center; width:80%; display: block; margin-left: auto; margin-right: auto;" src="https://ipfs.io/ipfs/{{meme.ipfs_id}}">
-                <p>Meme IPFS ID: <a href="https://ipfs.io/ipfs/{{meme.ipfs_id}}" target="_blank">{{meme.ipfs_id}}</a></p>
-                <p>Meme TX ID: <a href="http://explorer.kekcoin.co/tx/{{meme.txid}}" target="_blank">{{meme.txid}}</a></p>
-                <p>Meme Author: <a href="http://explorer.kekcoin.co/address/{{meme.author}}" target="_blank">{{meme.author}}</a></p>
-                <p>Meme Hashlink: {{meme.hashlink}}</p>
-                <p>Meme Kekcoin block: {{meme.block}}</p>
+                <a href="/meme/{{meme.meme_height}}"><img class="img-responsive" style="align:centre; width:40%; display: block; margin-left: auto; margin-right: auto;" src="https://ipfs.io/ipfs/{{meme.ipfs_id}}"></a>
+                <p style="font-size:8pt">Meme IPFS ID: <a href="https://ipfs.io/ipfs/{{meme.ipfs_id}}" target="_blank">{{meme.ipfs_id}}</a></p>
+                <p style="font-size:8pt">Meme TX ID: <a href="http://explorer.kekcoin.co/tx/{{meme.txid}}" target="_blank">{{meme.txid}}</a></p>
+                <p style="font-size:8pt">Meme Author: <a href="http://explorer.kekcoin.co/address/{{meme.author}}" target="_blank">{{meme.author}}</a></p>
+                <p style="font-size:8pt">Meme Hashlink: {{meme.hashlink}}</p>
+                <p style="font-size:8pt">Meme Kekcoin block: {{meme.block}}</p>
             </div>
         </div>
         {% endfor %}
