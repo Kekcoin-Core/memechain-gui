@@ -80,23 +80,23 @@ class Pagination(object):
 
 class MemeTimeline(object):
     api_root = "http://95.179.132.93:1337/api"
-    memechain_height = int(getJSON("%s/getheight" % api_root)['result'])
 
     @classmethod
     def find_paginated(self, pagination):
+        memechain_height = int(getJSON("%s/getheight" % self.api_root)['result'])
         # self.count returns the total number of items in the timeline
-        pagination.total = self.memechain_height
+        pagination.total = memechain_height
         # pass in the pagination params which can be used as offset
-        timeline = self.find(limit=pagination.per_page, start=pagination.start)
+        timeline = self.find(limit=pagination.per_page, start=pagination.start, memechain_height=memechain_height)
         return timeline
 
     @classmethod
-    def find(self, limit=100, start=0):
+    def find(self, limit=100, start=0, memechain_height=0):
         sightclient = SightengineClient("1347331372", "BhoFasNuF3zAGp8XSRXi")
         timeline = []
 
         for ident in range(start, start + limit):
-            meme_height = self.memechain_height - ident
+            meme_height = memechain_height - ident
             rawdata_meme = getJSON("%s/getmemedatabyheight/%s" %
                                    (self.api_root, str(meme_height)))['result']
 
