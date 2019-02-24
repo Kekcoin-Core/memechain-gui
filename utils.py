@@ -125,16 +125,18 @@ class MemeTimeline(object):
             # meme represents height
             rawdata_meme = getJSON("%s/getmemedatabyheight/%s" %
                                    (self.api_root, meme))['result']
+            result = dict(rawdata_meme,**{'meme_identifier': height})
 
         except ValueError as e:
             # meme represents ipfsid
             rawdata_meme = getJSON("%s/getmemedatabyhash/%s" %
                                    (self.api_root, meme))['result']
+            result = dict(rawdata_meme,**{'meme_identifier': rawdata_meme['hashlink']})
 
         sight_output = sightclient.check('nudity').set_url(
             'https://ipfs.io/ipfs/%s' % rawdata_meme['ipfs_id'])
 
         if sight_output['nudity']['safe'] > 0.5:
-            return dict(rawdata_meme,**{'meme_height': self.memechain_height})
+            return result
         else:
             return None
