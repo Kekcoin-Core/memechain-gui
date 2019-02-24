@@ -133,10 +133,14 @@ class MemeTimeline(object):
                                    (self.api_root, meme))['result']
             result = dict(rawdata_meme,**{'meme_identifier': rawdata_meme['hashlink']})
 
-        sight_output = sightclient.check('nudity').set_url(
-            'https://ipfs.io/ipfs/%s' % rawdata_meme['ipfs_id'])
+        try:
+            sight_output = sightclient.check('nudity').set_url(
+                'https://ipfs.io/ipfs/%s' % rawdata_meme['ipfs_id'])
 
-        if sight_output['nudity']['safe'] > 0.5:
+            if sight_output['nudity']['safe'] > 0.5:
+                return result
+            else:
+                return None
+
+        except KeyError as e:
             return result
-        else:
-            return None

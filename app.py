@@ -54,29 +54,34 @@ def upload_file():
     file_read = file.read()
 
     if ext in ALLOWED_EXT:
-        sightclient = SightengineClient("1347331372", "BhoFasNuF3zAGp8XSRXi")
+        try:
+            sightclient = SightengineClient("1347331372", "BhoFasNuF3zAGp8XSRXi")
 
-        sight_output = sightclient.check('nudity').set_bytes(file_read)
+            sight_output = sightclient.check('nudity').set_bytes(file_read)
 
-        if sight_output['nudity']['safe'] > 0.5:
-            if ext == 'jpg':
-                ext = 'jpeg'
-            headers = {'Content-Type': 'image/%s' % ext.lower()}
+            if sight_output['nudity']['safe'] > 0.5:
+                if ext == 'jpg':
+                    ext = 'jpeg'
+                headers = {'Content-Type': 'image/%s' % ext.lower()}
 
-            req = requests.post("http://95.179.132.93:1337/api/addmeme",
-                                data=file_read, stream=True, headers=headers)
-            json_response = req.json()
+                req = requests.post("http://95.179.132.93:1337/api/addmeme",
+                                    data=file_read, stream=True, headers=headers)
+                json_response = req.json()
 
-            try:
-                if json_response['success'] == True:
-                    return flask.render_template('upload-success.html')
+                try:
+                    if json_response['success'] == True:
+                        return flask.render_template('upload-success.html')
 
-            except KeyError as e:
-                error_msg = json_response['description']
+                except KeyError as e:
+                    error_msg = json_response['description']
+                    return flask.render_template('upload-failed.html', error_msg=error_msg)
+
+            else:
+                error_msg = "Meme image has not passed profanity filter. Please do not upload offensive materials."
                 return flask.render_template('upload-failed.html', error_msg=error_msg)
-
-        else:
-            error_msg = "Meme image has not passed profanity filter. Please do not upload offensive materials."
+        
+        except KeyError as e:
+            error_msg = "Profanity filter max API call limit reached." 
             return flask.render_template('upload-failed.html', error_msg=error_msg)
 
     else:
